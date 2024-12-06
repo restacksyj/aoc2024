@@ -3,8 +3,8 @@ using namespace std;
 
 int main() {
 
-  //ifstream f("input.txt");
-  ifstream f("input1.txt");
+  ifstream f("input.txt");
+  //ifstream f("input1.txt");
 
   if (!f.is_open()) {
     cerr << " error opening file" << endl;
@@ -46,20 +46,23 @@ int main() {
 
   while (row != n - 1 && col != m - 1) {
     if (ch == '^') {
-      //cout << "up" << endl;
+      // cout << "up" << endl;
       if (starting) {
         v[row][col] = '.';
         starting = false;
       }
       int nR = row;
-      /*visvec[nR][col] = 'x';*/
       while (nR >= 0 && v[nR][col] == '.') {
         visvec[nR][col] = 'x';
         nR--;
       }
+      if (nR < 0) {
+        break;
+      }
       if (nR >= 0 && nR < n && v[nR][col] == '#') {
         row = nR + 1;
         col += 1;
+        cout << "row" << row << "col" << col << "up" << endl;
         ch = '>';
       }
     } else if (ch == '>') {
@@ -72,6 +75,7 @@ int main() {
       if (nC >= 0 && nC < m && v[row][nC] == '#') {
         row = row + 1;
         col = nC - 1;
+        cout << "row" << row << "col" << col << "right" << endl;
         ch = 'v';
       }
     } else if (ch == 'v') {
@@ -87,6 +91,7 @@ int main() {
       if (nR >= 0 && nR < n && v[nR][col] == '#') {
         row = nR - 1;
         col -= 1;
+        cout << "row" << row << "col" << col << "down" << endl;
         ch = '<';
       }
     } else if (ch == '<') {
@@ -99,6 +104,7 @@ int main() {
       if (nC >= 0 && nC < m && v[row][nC] == '#') {
         row = row - 1;
         col = nC + 1;
+        cout << "row" << row << "col" << col << "left" << endl;
         ch = '^';
       }
     }
