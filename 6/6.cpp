@@ -4,7 +4,7 @@ using namespace std;
 int main() {
 
   ifstream f("input.txt");
-  //ifstream f("input1.txt");
+  // ifstream f("input1.txt");
 
   if (!f.is_open()) {
     cerr << " error opening file" << endl;
