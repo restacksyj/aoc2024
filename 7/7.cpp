@@ -29,8 +29,8 @@ bool vtry(vector<int> &nums, long long sum) {
 }
 
 int main() {
- ifstream f("input.txt");
-   //ifstream f("input1.txt");
+  ifstream f("input.txt");
+  //ifstream f("input1.txt");
 
   if (!f.is_open()) {
     cerr << " error opening file" << endl;
@@ -39,6 +39,8 @@ int main() {
 
   string s;
   long long ans = 0;
+  int j = 0;
+  vector<int> unsafeLines;
   while (getline(f, s)) {
     stringstream ss(s);
     string val;
@@ -59,10 +61,17 @@ int main() {
     }
     if (vtry(v, sum)) {
       ans += sum;
+    } else {
+      unsafeLines.push_back(j);
     }
+
+    j++;
   }
 
   cout << ans << endl;
+  for (auto it : unsafeLines) {
+    cout << it << endl;
+  }
 
   return 0;
 }
