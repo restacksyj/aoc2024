@@ -43,7 +43,11 @@ int main() {
   printvec(lists);
 
   vector<int> availableSpaces;
-  map<int, set<pair<int, int>>> availableSpacesMap;
+  auto cmp = [](const std::pair<int, int> &a, const std::pair<int, int> &b) {
+    return a.first < b.first;
+  };
+
+  map<int, set<pair<int, int>, decltype(cmp)>> availableSpacesMap;
 
   int i = 0;
   while (i < (int)lists.size()) {
@@ -52,16 +56,17 @@ int main() {
       while (lists[i] == -1) {
         i++;
       }
-      availableSpacesMap[i - 1 - start].insert({start, i-1});
+      availableSpacesMap[i - start].insert({start, i});
     }
     i++;
   }
 
-  for (auto it : availableSpacesMap) {
-    for (auto k : it.second) {
-      cout << k.first << k.second << endl;
-    }
-  }
+  /*for (auto it : availableSpacesMap) {*/
+  /*  cout << "they key" << it.first << endl;*/
+  /*  for (auto k : it.second) {*/
+  /*    cout << k.first << k.second << endl;*/
+  /*  }*/
+  /*}*/
 
   int m = (int)lists.size() - 1;
   while (id >= 0) {
@@ -69,45 +74,64 @@ int main() {
     while (lists[m] != id) {
       m--;
     }
-
     int key = no_of_files;
     int map_it = 0;
     bool found = false;
-    while (map_it < (int)availableSpacesMap.size()) {
-      if (availableSpacesMap.count(key) > 0) {
-        found = true;
-        break;
-      } else {
-        key++;
+    cout << key << endl;
+    auto it = availableSpacesMap.lower_bound(no_of_files);
+    if (it != availableSpacesMap.end()) {
+      auto range = *it->second.begin();
+      it->second.erase(it->second.begin());
+
+      int start = range.first, end = range.second;
+      cout << start << end << endl;
+      if (m < start) {
+        id--;
+        continue;
       }
-      map_it++;
-    }
-    if (found) {
-      auto foundKeyVal = *availableSpacesMap[key].begin();
-      int start = foundKeyVal.first;
-      int end = foundKeyVal.second;
       bool updateKey = false;
-      if (end - start + 1> no_of_files) {
-        updateKey = true;
-      }
+      /*if (end - start - 1 > no_of_files) {*/
+      /*  updateKey = true;*/
+      /*}*/
+      /*cout << updateKey << endl;*/
+      /*for (int u = m; u > m - no_of_files; u--) {*/
+      /*  lists[start] = lists[u];*/
+      /*  lists[u] = -1;*/
+      /*  printvec(lists);*/
+      /*  start++;*/
+      /*}*/
       for (int u = m; u > m - no_of_files; u--) {
-        lists[start] = lists[u];
+        lists[start++] = lists[u];
         lists[u] = -1;
-        /*printvec(lists);*/
-        start++;
       }
 
-      if (updateKey ) {
-        availableSpacesMap[end - start+1].insert({start, end});
+      if (end > start && end - start > 0) {
+        availableSpacesMap[end - start].insert({start, end});
       }
 
-      if (availableSpacesMap[key].size() > 0) {
-        availableSpacesMap[key].erase(availableSpacesMap[key].begin());
+      /*if (updateKey) {*/
+      /*  availableSpacesMap[end - start].insert({start, end});*/
+      /*}*/
+      if (it->second.empty()) {
+        availableSpacesMap.erase(it);
       }
-      if (availableSpacesMap[key].size() == 0) {
-        availableSpacesMap.erase(key);
-      }
+
+      /*if (availableSpacesMap[key].size() > 0) {*/
+      /*  availableSpacesMap[key].erase(availableSpacesMap[key].begin());*/
+      /*}*/
+      /*if (availableSpacesMap[key].size() == 0) {*/
+      /*  availableSpacesMap.erase(key);*/
+      /*}*/
     }
+    /*while (map_it < (int)availableSpacesMap.size()) {*/
+    /*  if (availableSpacesMap.count(key) > 0) {*/
+    /*    found = true;*/
+    /*    break;*/
+    /*  } else {*/
+    /*    key++;*/
+    /*  }*/
+    /*  map_it++;*/
+    /*}*/
     id--;
   }
 
