@@ -1,39 +1,36 @@
 #include <bits/stdc++.h>
+#include <climits>
 using namespace std;
 
-int solve(vector<int> nums) {
+long long solve(vector<int> nums) {
   pair<int, int> A = {nums[0], nums[1]};
   pair<int, int> B = {nums[2], nums[3]};
-  pair<int, int> p = {nums[4], nums[5]};
+  pair<long long, long long> p = {nums[4]+1'00'000'000'000'000, nums[5]+1'00'000'000'000'000};
 
-  int j = 0;
-  int A_cost, B_cost;
-  bool found = false;
-  while (j <= 100) {
-    int x1 = A.first * j;
+  for (long long j = 0; j <= 100000000; j++) {
+    long long x1 = A.first * j;
     if (x1 > p.first) {
-      j++;
-      continue;
-    }
-    int x2 = (p.first - x1) % B.first;
-    int y1 = A.second * j;
-    if (y1 > p.second) {
-      j++;
-      continue;
-    }
-    int y2 = (p.second - y1) % B.second;
-    if (x2 == 0 && y2 == 0) {
-      found = true;
-      A_cost = j;
-      B_cost = (p.first - x1) / B.first;
       break;
     }
-    j++;
+    long long rem_x = p.first - x1;
+    if (rem_x % B.first != 0) {
+      continue;
+    }
+
+    long long y1 = A.second * j;
+    if (y1 > p.second) {
+      continue;
+    }
+    long long rem_y = p.second - y1;
+    if (rem_y % B.second != 0) {
+      continue;
+    }
+    if (rem_x / B.first != rem_y / B.second) {
+      continue;
+    }
+    return j * 3 + rem_y / B.second;
   }
 
-  if (found) {
-    return A_cost * 3 + B_cost;
-  }
   return 0;
 }
 
@@ -83,7 +80,7 @@ int main() {
       val = match.suffix();
     }
     if (temp.size() == 6) {
-      ans += solve2(temp);
+      ans += solve(temp);
       temp.clear();
     }
   }
